@@ -4,7 +4,6 @@ npm-debug.log.*
 htmldocs/
 lerna-debug.log
 lib/
-dist/
 dist-tests/
 yarn-error.log
 .next

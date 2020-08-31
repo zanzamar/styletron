@@ -1,3 +1,0 @@
-import { styled as s } from "styletron-react";
-const Foo = s("div", { color: "red" });
-const Bar = s("div", { color: "red" });
