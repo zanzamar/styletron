@@ -70,7 +70,12 @@ type hydrateT =
 type optionsT = {
   hydrate?: hydrateT,
   container?: Element,
+
+  // [NOTE] prefixed to the beginning of each classname.  ie: `PREFIX-generatedClassName`
   prefix?: string,
+  // [NOTE] used for css namespacing for style resets and other functionality.
+  //        when utilized, rendered elements must be wrapped in the "selector namespace"
+  selectorPrefix?: string,
 };
 
 class StyletronClient implements StandardEngine {
@@ -91,7 +96,7 @@ class StyletronClient implements StandardEngine {
       const {pseudo, block} = value;
       const sheet: CSSStyleSheet = (this.styleElements[cache.key].sheet: any);
       const selector = atomicSelector(id, pseudo);
-      const rule = styleBlockToRule(selector, block);
+      const rule = styleBlockToRule(selector, block, opts.selectorPrefix);
       try {
         sheet.insertRule(rule, sheet.cssRules.length);
         if (__BROWSER__ && __DEV__ && window.__STYLETRON_DEVTOOLS__) {

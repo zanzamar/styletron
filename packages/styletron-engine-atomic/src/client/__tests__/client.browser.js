@@ -141,6 +141,44 @@ test("prefix", t => {
   t.end();
 });
 
+test("selectorPrefix", t => {
+  const container = document.createElement("div");
+  document.body && document.body.appendChild(container);
+  const instance = new StyletronClient({
+    container,
+    selectorPrefix: ".SOME_CSS_WRAP",
+  });
+  t.equal(
+    instance.renderStyle({color: "purple"}),
+    ".SOME_CSS_WRAP ae",
+    "new unique class returned",
+  );
+  t.equal(
+    instance.renderFontFace({src: "url(blah)"}),
+    ".SOME_CSS_WRAP ae",
+    "new unique font family returned",
+  );
+  t.equal(
+    instance.renderKeyframes({from: {color: "red"}, to: {color: "blue"}}),
+    ".SOME_CSS_WRAP ae",
+    "new unique animation name returned",
+  );
+
+  // [NOTE] not adjusting keyframes as they do not relate to the necessary resets.
+  t.deepEqual(sheetsToRules(document.styleSheets), [
+    {
+      media: "",
+      rules: [
+        "..SOME_CSS_WRAP ae { color: purple; }",
+        `@font-face { font-family: foo_ae; src: url("blah"); }`,
+        "@keyframes foo_ae { \n  0% { color: red; }\n  100% { color: blue; }\n}",
+      ],
+    },
+  ]);
+  instance.container.remove();
+  t.end();
+});
+
 test("hydration", t => {
   const {getSheets, cleanup, container} = setup();
 
